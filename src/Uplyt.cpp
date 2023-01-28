@@ -24,11 +24,16 @@ struct Uplyt : Module {
 		LIGHTS_LEN
 	};
 
-	float voltage = 0.f;
+	//float voltage = 0.f;
+
+	float bpm = 120.f;
+
+	int beatFrames = 0;  // Number of frames remaining for the current beat output signal
+	int waitFrames = 0;  // Number of frames left until the next beat output signal starts
 
 	Uplyt() {
 		config(PARAMS_LEN, INPUTS_LEN, OUTPUTS_LEN, LIGHTS_LEN);
-		configParam(BPMCONTROL_PARAM, 0.f, 1.f, 0.f, "");
+		configParam(BPMCONTROL_PARAM, 0.f, 720.f, 120.f, "");
 		configParam(SUBDIVIDESWITCH_PARAM, 0.f, 1.f, 0.f, "");
 		configParam(TUPLETCONTROL_PARAM, 0.f, 1.f, 0.f, "");
 		configParam(TUPLETCVCONTROL_PARAM, 0.f, 1.f, 0.f, "");
@@ -40,12 +45,29 @@ struct Uplyt : Module {
 	}
 
 	void process(const ProcessArgs& args) override {
-		voltage += 0.1f;
-		if (voltage > 10.f)
+		int defaultBeatFrames = 80;
+		float voltage = 0.f;
+
+		if (int(bpm) != int(params[BPMCONTROL_PARAM].getValue()))
 		{
-			voltage = 0.f;
+			// BPM Control changed
+			bpm = params[BPMCONTROL_PARAM].getValue();
 		}
 
+		beatFrames--;
+		waitFrames--;
+
+		if (waitFrames <= 0)
+		{
+			beatFrames = defaultBeatFrames;
+			waitFrames = int(args.sampleRate / (bpm / 60));
+		}
+
+		if (beatFrames > 0)
+		{
+			voltage = 10.f;
+		}
+			
 		outputs[BPMOUTPUT_OUTPUT].setVoltage(voltage);
 	}
 };
