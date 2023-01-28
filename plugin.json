@@ -1,0 +1,23 @@
+{
+  "slug": "LynFyn",
+  "name": "LynFyn",
+  "version": "2.0.0",
+  "license": "proprietary",
+  "brand": "LynFyn",
+  "author": "",
+  "authorEmail": "",
+  "authorUrl": "",
+  "pluginUrl": "",
+  "manualUrl": "",
+  "sourceUrl": "",
+  "donateUrl": "",
+  "changelogUrl": "",
+  "modules": [
+    {
+      "slug": "Uplyt",
+      "name": "Uplyt",
+      "description": "",
+      "tags": []
+    }
+  ]
+}
